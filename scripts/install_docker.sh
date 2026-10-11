@@ -1,17 +1,19 @@
 #!/bin/bash
 set -e
 
+export DEBIAN_FRONTEND=noninteractive
+
 apt-get update
 
-# Remove conflicting container runtime packages if installed
-apt-get remove -y containerd docker.io docker-doc docker-compose podman-docker || true
+# Remove conflicting packages from Ubuntu
+apt-get remove -y docker.io docker-doc docker-compose docker-compose-v2 docker-buildx podman-docker containerd runc || true
 
-# Install Docker using Ubuntu packages
-apt-get install -y docker.io
+# Install Docker Engine from Docker's official repository
+apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-# Enable and start Docker
+# Start Docker
 systemctl enable --now docker
 
-# Verify Docker installation
+# Verify
 docker --version
 systemctl is-active docker
